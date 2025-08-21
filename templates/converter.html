@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Converter</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e6f0fa 0%, #ffffff 40%, #2c7edb 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(to right, #becee200, #2c7edb00);
+      color: white;
+      padding: 1.5rem 2rem 2rem;
+      position: relative;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: linear-gradient(45deg, #ef4444, #dc2626);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background 0.2s ease-in-out;
+      border: none;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(45deg, #dc2626, #b91c1c);
+    }
+
+    .header-center {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .header-center h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .header-center p {
+      margin-top: 0.5rem;
+      font-size: 1.125rem;
+      color: #3c3d3d;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 1rem;
+    }
+
+    .converter-box {
+      width: 100%;
+      max-width: 34rem;
+      background: linear-gradient(to top left, rgba(255, 255, 255, 0.85), rgba(230, 240, 250, 0.95));
+      backdrop-filter: blur(16px);
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 2.5rem;
+      border: 1px solid rgba(200, 200, 255, 0.3);
+    }
+
+    .converter-box h2 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #1e3a8a;
+    }
+
+    .field-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    select,
+    input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      background-color: #f9fafb;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus,
+    input[type="file"]:focus {
+      border-color: #3b82f6;
+    }
+
+    .upload-section {
+      margin-bottom: 1.75rem;
+    }
+
+    .convert-btn {
+      width: 100%;
+      background: linear-gradient(to right, #2c7edb, #1d4f91);
+      color: white;
+      font-weight: 600;
+      padding: 0.9rem;
+      border-radius: 0.75rem;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .convert-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    #status {
+      margin-top: 1rem;
+      text-align: center;
+      color: #475569;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    #status.show {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-bar">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo" />
+      </div>
+      <style>
+        .logout-btn a {
+          color: white;
+          /* White text */
+          text-decoration: none;
+          /* Remove underline */
+        }
+
+        .logout-btn a:hover {
+          color: #ddd;
+          /* Optional: light grey on hover */
+        }
+      </style>
+
+      <button class="logout-btn"><a href="/logout">Logout</a></button>
+
+    </div>
+
+    <!-- <div class="header-center"> -->
+    <!-- <h1 style="color: rgb(44, 44, 44);">File Converter</h1> -->
+    <!-- <p>Convert HTML EXCEL | HTML PDF | HTML WORD | PDF EXCEL | PDF WORD | EXCEL WORD | EXCEL XML</p> -->
+    <!-- </div> -->
+  </header>
+
+  <main>
+    <div class="converter-box">
+      <h2>Select Conversion</h2>
+
+      <div class="field-group">
+        <div style="width: 50%;">
+          <label for="fromSelect">From</label>
+          <select id="fromSelect">
+            <option value="excel">Excel</option>
+            <option value="html">HTML</option>
+            <option value="pdf">PDF</option>
+            <option value="word">Word</option>
+          </select>
+        </div>
+        <div style="width: 50%;">
+          <label for="toSelect">To</label>
+          <select id="toSelect"></select>
+        </div>
+      </div>
+
+      <div class="upload-section">
+        <label for="fileInput">Upload File</label>
+        <input type="file" id="fileInput" />
+      </div>
+
+      <button id="convertBtn" class="convert-btn">Convert</button>
+      <p id="status">Processing...</p>
+    </div>
+  </main>
+
+  <script>
+    const convertBtn = document.getElementById('convertBtn');
+const fromSelect = document.getElementById('fromSelect');
+const toSelect = document.getElementById('toSelect');
+const fileInput = document.getElementById('fileInput');
+const status = document.getElementById('status');
+
+const acceptedTypes = {
+  excel: '.xls,.xlsx',
+  html: '.html,.htm',
+  pdf: '.pdf',
+  word: '.docx'
+};
+
+const conversionMap = {
+  excel: ['pdf', 'word', 'html'],
+  html: ['excel', 'pdf', 'word'],
+  pdf: ['excel', 'word', 'html'],
+  word: ['pdf', 'excel', 'html']
+};
+
+const validRoutes = {
+  excel_pdf: '/excel_to_pdf_convert',
+  excel_word: '/excel_to_word_convert',
+  excel_html: '/excel_to_html_convert',
+  html_excel: '/html_to_excel_convert',
+  html_pdf: '/html_to_pdf_convert',
+  html_word: '/html_to_word_convert',
+  pdf_excel: '/pdf_to_excel_convert',
+  pdf_word: '/pdf_to_word_convert',
+  pdf_html: '/pdf_to_html_convert',
+  word_pdf: '/word_to_pdf_convert',
+  word_excel: '/word_to_excel_convert',
+  word_html: '/word_to_html_convert'
+};
+
+const extensionMap = {
+  pdf: 'pdf',
+  excel: 'xlsx',
+  word: 'docx',
+  html: 'html'
+};
+
+function updateToOptions() {
+  const fromValue = fromSelect.value;
+  const possibleToValues = conversionMap[fromValue] || [];
+  toSelect.innerHTML = '';
+
+  possibleToValues.forEach(toValue => {
+    const opt = document.createElement('option');
+    opt.value = toValue;
+    opt.textContent = toValue.charAt(0).toUpperCase() + toValue.slice(1);
+    toSelect.appendChild(opt);
+  });
+
+  fileInput.accept = acceptedTypes[fromValue] || '*/*';
+}
+
+fromSelect.addEventListener('change', updateToOptions);
+updateToOptions();
+
+convertBtn.addEventListener('click', async () => {
+  const from = fromSelect.value;
+  const to = toSelect.value;
+  const routeKey = `${from}_${to}`;
+  const route = validRoutes[routeKey];
+
+  if (!route) {
+    alert(`Conversion from ${from} to ${to} is not supported.`);
+    return;
+  }
+
+  if (!fileInput.files.length) {
+    alert('Please select a file.');
+    return;
+  }
+
+  const uploadedFile = fileInput.files[0];
+  // Extract the original file name without extension
+  const originalFileName = uploadedFile.name.split('.').slice(0, -1).join('.');
+
+  const formData = new FormData();
+  formData.append('file', uploadedFile);
+
+  status.classList.add('show');
+  status.textContent = 'Processing...';
+
+  try {
+    const response = await fetch(route, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) throw new Error('Conversion failed.');
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    // Set the download name using the original file name and the target extension
+    a.download = `${originalFileName}.${extensionMap[to] || to}`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    status.textContent = 'Conversion complete!';
+  } catch (error) {
+    status.textContent = 'Error converting file.';
+    console.error(error);
+  }
+});
+  </script>
+</body>
+
+</html>

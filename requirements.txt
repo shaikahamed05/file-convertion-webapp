@@ -1,0 +1,28 @@
+flask
+mysql-connector-python==8.0.33
+#test - 1
+openpyxl
+reportlab
+#test - 2
+#excel to pdf
+pywin32
+
+#html to excel
+pandas
+beautifulsoup4
+webcolors
+python-magic
+werkzeug
+
+xhtml2pdf
+pdf2docx
+docx2pdf
+
+aspose-pdf
+
+python-docx
+
+fastapi 
+uvicorn
+
+python-multipart

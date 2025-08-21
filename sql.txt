@@ -1,0 +1,20 @@
+#database creation
+CREATE database docscraper;
+
+#table creation
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+#users creation
+INSERT INTO users (username, email, password) VALUES ('ahamed', 'ahamed@gmail.com', 'ahamed@123');
+INSERT INTO users (username, email, password) VALUES ('mohan', 'mohan@gmail.com', 'mohan@123');
+INSERT INTO users (username, email, password) VALUES ('renuka', 'renuka@gmail.com', 'renuka@123');
+INSERT INTO users (username, email, password) VALUES ('srinu', 'srinu@gmail.com', 'srinu@123');
+INSERT INTO users (username, email, password) VALUES ('sami', 'sami@gmail.com', 'sami@123');
+
+#to view all the data in the table
+select * from users;
